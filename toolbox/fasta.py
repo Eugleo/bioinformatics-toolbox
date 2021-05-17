@@ -22,3 +22,6 @@ class Sequence:
 
     def __len__(self):
         return len(self.sequence)
+
+    def __iter__(self):
+        return self.sequence.__iter__()
