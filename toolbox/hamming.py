@@ -1,7 +1,7 @@
-from toolbox.fasta import Sequence
+from typing import Iterable
 
 
-def distance(s1: Sequence, s2: Sequence):
+def distance(s1: Iterable, s2: Iterable) -> int:
     if len(s1) != len(s2):
         raise ValueError(
             f"The sequences should have identical lengths, but the lengths are {len(s1)}, {len(s2)}"

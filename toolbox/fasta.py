@@ -1,12 +1,8 @@
 import dataclasses
+from typing import Iterator
 
-from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqIO
-
-
-def parse(path):
-    return (Sequence(s) for s in SeqIO.parse(path, "fasta"))
 
 
 @dataclasses.dataclass(init=False)
@@ -25,3 +21,10 @@ class Sequence:
 
     def __iter__(self):
         return self.sequence.__iter__()
+
+    def __getitem__(self, item):
+        return self.sequence.__getitem__(item)
+
+
+def parse(path) -> Iterator[Sequence]:
+    return (Sequence(s) for s in SeqIO.parse(path, "fasta"))
