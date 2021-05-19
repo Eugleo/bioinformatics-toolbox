@@ -22,17 +22,19 @@ Result = Tuple[int, Iterator[Operation]]
 Memo = List[List[Union[None, Result]]]
 
 
-def align(s1: Mapping, s2: Mapping) -> Tuple[int, List[Tuple[str, str]]]:
+def align(s1: Mapping, s2: Mapping, skip_backtrack=False):
     # Rows = s1, cols = s2
     memo = [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)]
     l, memo = alignh(memo, s1, s2, 0, 0)
-    assignments, _ = backtrack(
-        [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)], memo, s1, s2, 0, 0
-    )
-    return l, assignments
+    if skip_backtrack:
+        return {"distance": l}
+    else:
+        alignments, _ = backtrack(
+            [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)], memo, s1, s2, 0, 0
+        )
+        return {"distance": l, "alignments": alignments}
 
 
-# Could be faster by using generators
 def alignh(memo: Memo, s1: Mapping, s2: Mapping, i1: int, i2: int) -> Tuple[int, Memo]:
     i1, i2 = min(i1, len(s1)), min(i2, len(s2))
 
@@ -66,6 +68,8 @@ def alignh(memo: Memo, s1: Mapping, s2: Mapping, i1: int, i2: int) -> Tuple[int,
     return memo[i1][i2][0], memo
 
 
+# Tried to make it faster by using deques instead of strings
+# Failed
 def backtrack(memo, data, s1: str, s2: str, i1: int, i2: int):
     if memo[i1][i2] is not None:
         return [(a.copy(), b.copy()) for a, b in memo[i1][i2]], memo
