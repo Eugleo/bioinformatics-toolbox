@@ -22,17 +22,20 @@ Result = Tuple[int, Iterator[Operation]]
 Memo = List[List[Union[None, Result]]]
 
 
-def align(s1: Mapping, s2: Mapping, skip_backtrack=False):
+def align(s1: Mapping, s2: Mapping, list_all=True):
     # Rows = s1, cols = s2
     memo = [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)]
     l, memo = alignh(memo, s1, s2, 0, 0)
-    if skip_backtrack:
-        return {"distance": l}
-    else:
-        alignments, _ = backtrack(
-            [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)], memo, s1, s2, 0, 0
-        )
-        return {"distance": l, "alignments": alignments}
+    alignments, _ = backtrack(
+        [[None] * (len(s2) + 1) for _ in range(len(s1) + 1)],
+        memo,
+        s1,
+        s2,
+        0,
+        0,
+        list_all,
+    )
+    return {"distance": l, "alignments": alignments}
 
 
 def alignh(memo: Memo, s1: Mapping, s2: Mapping, i1: int, i2: int) -> Tuple[int, Memo]:
@@ -70,33 +73,24 @@ def alignh(memo: Memo, s1: Mapping, s2: Mapping, i1: int, i2: int) -> Tuple[int,
 
 # Tried to make it faster by using deques instead of strings
 # Failed
-def backtrack(memo, data, s1: str, s2: str, i1: int, i2: int):
-    if memo[i1][i2] is not None:
-        return [(a.copy(), b.copy()) for a, b in memo[i1][i2]], memo
-
+def backtrack(memo, data, s1: str, s2: str, i1: int, i2: int, list_all: bool):
     if i1 == len(s1) and i2 == len(s2):
         memo[i1][i2] = [(deque(), deque())]
     else:
         possibilities = []
-        for op in data[i1][i2][1]:
+        for op in data[i1][i2][1] if list_all else data[i1][i2][1][0:1]:
             if op == Operation.DEL:
-                base, memo = backtrack(memo, data, s1, s2, i1 + 1, i2)
-                for a, b in base:
-                    a.appendleft(s1[i1])
-                    b.appendleft("-")
-                possibilities += base
+                j1, j2, l, r = 1, 0, s1[i1], "-"
             elif op == Operation.ADD:
-                base, memo = backtrack(memo, data, s1, s2, i1, i2 + 1)
-                for a, b in base:
-                    a.appendleft("-")
-                    b.appendleft(s2[i2])
-                possibilities += base
+                j1, j2, l, r = 0, 1, "-", s2[i2]
             else:
-                base, memo = backtrack(memo, data, s1, s2, i1 + 1, i2 + 1)
-                for a, b in base:
-                    a.appendleft(s1[i1])
-                    b.appendleft(s2[i2])
-                possibilities += base
+                j1, j2, l, r = 1, 1, s1[i1], s2[i2]
+            base, memo = backtrack(memo, data, s1, s2, i1 + j1, i2 + j2, list_all)
+            base = [(a.copy(), b.copy()) for a, b in base] if list_all else base
+            for a, b in base:
+                a.appendleft(l)
+                b.appendleft(r)
+            possibilities += base
         memo[i1][i2] = possibilities
 
     return memo[i1][i2], memo
