@@ -2,9 +2,9 @@
 
 You can see the API and most of the functionality in the [samples notebook](https://github.com/Eugleo/bioinformatics-toolbox/blob/main/samples.ipynb).
 
-If you want to play around with the code, you'll need to have [poetry](https://python-poetry.org) and [msms](http://mgltools.scripps.edu/packages/MSMS) installed and available on your PATH. Then you can simply run:
+If you want to play around with the code, you'll need to have [poetry](https://python-poetry.org) and [msms](http://mgltools.scripps.edu/packages/MSMS) installed and available on your PATH. You'll also need Python 3.9.0 or later. Then you can simply run:
 
-```sh
+```
 > git clone https://github.com/Eugleo/bioinformatics-toolbox
 > cd bioinformatics-toolbox
 > poetry install

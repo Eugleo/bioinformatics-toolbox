@@ -57,16 +57,15 @@ class Structure:
         ns = P.NeighborSearch(P.Selection.unfold_entities(self.structure, "A"))
         return ns.search(ligand.get_coord(), radius, level)
 
-    # Not tested, the msms tool doesn't run on my system
-    def get_residue_exposure(self, only_if=lambda x: True):
+    def get_residue_exposure(self, only_if=lambda x: True, msms_exec="msms"):
         exposed = Counter()
         buried = Counter()
-        surface = get_surface(self.structure)
+        surface = get_surface(self.structure, MSMS=msms_exec)
         for r in self.structure.get_residues():
             aa = r.get_resname()
             if only_if(aa):
                 mindist = min(min_dist(a.get_coord(), surface) for a in r.get_atoms())
-                if isclose(mindist, 0):
+                if mindist < 1.4:  # Anybody know why 1.399 is the minimum mindist?
                     exposed[aa] += 1
                 else:
                     buried[aa] += 1
