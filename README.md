@@ -1,6 +1,8 @@
 # Evžen's bioinformatic bag of tricks
 
-You'll need to have [poetry](https://python-poetry.org) and [msms](http://mgltools.scripps.edu/packages/MSMS) installed and available on your PATH. Then you can simply run:
+You can see the API and most of the functionality in the [samples notebook](https://github.com/Eugleo/bioinformatics-toolbox/blob/main/samples.ipynb).
+
+If you want to play around with the code, you'll need to have [poetry](https://python-poetry.org) and [msms](http://mgltools.scripps.edu/packages/MSMS) installed and available on your PATH. Then you can simply run:
 
 ```sh
 > git clone https://github.com/Eugleo/bioinformatics-toolbox
@@ -9,7 +11,7 @@ You'll need to have [poetry](https://python-poetry.org) and [msms](http://mgltoo
 > poetry run jupyter notebook samples.ipynb
 ```
 
-A jupyter notebook will open, where you can play around with the package.
+Which will open the mentioned notebook in edit mode.
 
 ## Functionality
 
